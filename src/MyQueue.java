@@ -1,6 +1,8 @@
-public class MyQueue {
-    private Node front;
-    private Node rear;
+import java.util.NoSuchElementException;
+
+class MyQueue<T> {
+    private Node<T> front;
+    private Node<T> rear;
     private int size;
 
     public MyQueue() {
@@ -9,17 +11,15 @@ public class MyQueue {
         size = 0;
     }
 
-    public void add(Object value) {
-        Node newNode = new Node(value);
-
-        if (isEmpty()) {
+    public void add(T value) {
+        Node<T> newNode = new Node<>(value);
+        if (front == null) {
             front = newNode;
             rear = newNode;
         } else {
             rear.next = newNode;
             rear = newNode;
         }
-
         size++;
     }
 
@@ -33,38 +33,28 @@ public class MyQueue {
         return size;
     }
 
-    public Object peek() {
-        if (isEmpty()) {
-            return null;
+    public T peek() {
+        if (front == null) {
+            throw new NoSuchElementException("Queue is empty");
         }
         return front.value;
     }
 
-    public Object poll() {
-        if (isEmpty()) {
-            return null;
+    public T poll() {
+        if (front == null) {
+            throw new NoSuchElementException("Queue is empty");
         }
-
-        Object value = front.value;
+        T value = front.value;
         front = front.next;
         size--;
-
-        if (isEmpty()) {
-            rear = null;
-        }
-
         return value;
     }
 
-    private boolean isEmpty() {
-        return size == 0;
-    }
+    private static class Node<T> {
+        T value;
+        Node<T> next;
 
-    private class Node {
-        private Object value;
-        private Node next;
-
-        public Node(Object value) {
+        public Node(T value) {
             this.value = value;
             this.next = null;
         }

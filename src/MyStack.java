@@ -1,7 +1,8 @@
-import java.util.EmptyStackException;
 
-public class MyStack {
-    private Node top;
+import java.util.NoSuchElementException;
+
+class MyStack<T> {
+    private Node<T> top;
     private int size;
 
     public MyStack() {
@@ -9,8 +10,8 @@ public class MyStack {
         size = 0;
     }
 
-    public void push(Object value) {
-        Node newNode = new Node(value);
+    public void push(T value) {
+        Node<T> newNode = new Node<>(value);
         if (top == null) {
             top = newNode;
         } else {
@@ -18,22 +19,6 @@ public class MyStack {
             top = newNode;
         }
         size++;
-    }
-
-    public void remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-        if (index == 0) {
-            top = top.next;
-        } else {
-            Node currentNode = top;
-            for (int i = 0; i < index - 1; i++) {
-                currentNode = currentNode.next;
-            }
-            currentNode.next = currentNode.next.next;
-        }
-        size--;
     }
 
     public void clear() {
@@ -45,28 +30,28 @@ public class MyStack {
         return size;
     }
 
-    public Object peek() {
+    public T peek() {
         if (top == null) {
-            throw new EmptyStackException();
+            throw new NoSuchElementException("Stack is empty");
         }
         return top.value;
     }
 
-    public Object pop() {
+    public T pop() {
         if (top == null) {
-            throw new EmptyStackException();
+            throw new NoSuchElementException("Stack is empty");
         }
-        Object value = top.value;
+        T value = top.value;
         top = top.next;
         size--;
         return value;
     }
 
-    private class Node {
-        private Object value;
-        private Node next;
+    private static class Node<T> {
+        T value;
+        Node<T> next;
 
-        public Node(Object value) {
+        public Node(T value) {
             this.value = value;
             this.next = null;
         }

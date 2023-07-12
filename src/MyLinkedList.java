@@ -1,6 +1,6 @@
-public class MyLinkedList {
-    private Node head;
-    private Node tail;
+class MyLinkedList<T> {
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     public MyLinkedList() {
@@ -9,40 +9,17 @@ public class MyLinkedList {
         size = 0;
     }
 
-    public void add(Object value) {
-        Node newNode = new Node(value);
-        if (size == 0) {
+    public void add(T value) {
+        Node<T> newNode = new Node<>(value);
+        if (tail == null) {
             head = newNode;
             tail = newNode;
         } else {
             tail.next = newNode;
-            newNode.prev = tail;
+            newNode.previous = tail;
             tail = newNode;
         }
         size++;
-    }
-
-    public void remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-        Node currentNode = getNode(index);
-        Node prevNode = currentNode.prev;
-        Node nextNode = currentNode.next;
-
-        if (prevNode != null) {
-            prevNode.next = nextNode;
-        } else {
-            head = nextNode;
-        }
-
-        if (nextNode != null) {
-            nextNode.prev = prevNode;
-        } else {
-            tail = prevNode;
-        }
-
-        size--;
     }
 
     public void clear() {
@@ -55,30 +32,25 @@ public class MyLinkedList {
         return size;
     }
 
-    public Object get(int index) {
+    public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index out of bounds");
         }
-        Node currentNode = getNode(index);
-        return currentNode.value;
-    }
-
-    private Node getNode(int index) {
-        Node currentNode = head;
+        Node<T> current = head;
         for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+            current = current.next;
         }
-        return currentNode;
+        return current.value;
     }
 
-    private class Node {
-        private Object value;
-        private Node prev;
-        private Node next;
+    private static class Node<T> {
+        T value;
+        Node<T> previous;
+        Node<T> next;
 
-        public Node(Object value) {
+        public Node(T value) {
             this.value = value;
-            this.prev = null;
+            this.previous = null;
             this.next = null;
         }
     }
