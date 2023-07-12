@@ -11,15 +11,34 @@ class MyLinkedList<T> {
 
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
-        if (tail == null) {
+        if (head == null) {
             head = newNode;
             tail = newNode;
         } else {
             tail.next = newNode;
-            newNode.previous = tail;
             tail = newNode;
         }
         size++;
+    }
+
+    public void remove(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+        if (index == 0) {
+            head = head.next;
+            if (head == null) {
+                tail = null;
+            }
+        } else {
+            Node<T> prevNode = getNode(index - 1);
+            Node<T> nodeToRemove = prevNode.next;
+            prevNode.next = nodeToRemove.next;
+            if (prevNode.next == null) {
+                tail = prevNode;
+            }
+        }
+        size--;
     }
 
     public void clear() {
@@ -36,21 +55,24 @@ class MyLinkedList<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
-        Node<T> current = head;
+        Node<T> node = getNode(index);
+        return node.value;
+    }
+
+    private Node<T> getNode(int index) {
+        Node<T> node = head;
         for (int i = 0; i < index; i++) {
-            current = current.next;
+            node = node.next;
         }
-        return current.value;
+        return node;
     }
 
     private static class Node<T> {
         T value;
-        Node<T> previous;
         Node<T> next;
 
         public Node(T value) {
             this.value = value;
-            this.previous = null;
             this.next = null;
         }
     }

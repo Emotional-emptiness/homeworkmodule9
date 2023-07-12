@@ -17,6 +17,14 @@ class MyArrayList<T> {
         size++;
     }
 
+    public void remove(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        size--;
+    }
+
     public void clear() {
         elements = new Object[10];
         size = 0;
