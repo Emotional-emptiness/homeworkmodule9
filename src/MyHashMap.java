@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 class MyHashMap<K, V> {
     private Node<K, V>[] buckets;
     private int size;
@@ -8,26 +10,21 @@ class MyHashMap<K, V> {
     }
 
     public void put(K key, V value) {
-        int index = getIndex(key);
-        Node<K, V> newNode = new Node<>(key, value);
-        if (buckets[index] == null) {
-            buckets[index] = newNode;
-        } else {
-            Node<K, V> current = buckets[index];
-            while (current.next != null) {
-                if (current.key.equals(key)) {
-                    current.value = value;
-                    return;
-                }
-                current = current.next;
-            }
-            if (current.key.equals(key)) {
-                current.value = value;
-            } else {
-                current.next = newNode;
+        if (size == buckets.length) {
+            resize();
+        }
+        putValue(key, value);
+        size++;
+    }
+
+    private void resize() {
+        Node<K, V>[] newArrayNode = Arrays.copyOf(buckets, buckets.length);
+        buckets = new Node[buckets.length * 2];
+        for (Node<K, V> kvNode : newArrayNode) {
+            if (kvNode != null) {
+                putValue(kvNode.key, kvNode.value);
             }
         }
-        size++;
     }
 
     public void remove(K key) {
@@ -68,6 +65,28 @@ class MyHashMap<K, V> {
             current = current.next;
         }
         return null;
+    }
+
+    private void putValue(K key, V value) {
+        int index = getIndex(key);
+        Node<K, V> newNode = new Node<>(key, value);
+        if (buckets[index] == null) {
+            buckets[index] = newNode;
+        } else {
+            Node<K, V> current = buckets[index];
+            while (current.next != null) {
+                if (current.key.equals(key)) {
+                    current.value = value;
+                    return;
+                }
+                current = current.next;
+            }
+            if (current.key.equals(key)) {
+                current.value = value;
+            } else {
+                current.next = newNode;
+            }
+        }
     }
 
     private int getIndex(K key) {
